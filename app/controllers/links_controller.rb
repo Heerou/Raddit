@@ -1,5 +1,7 @@
 class LinksController < ApplicationController
   before_action :set_link, only: [:show, :edit, :update, :destroy]
+  #Auntentificar el usuario, para motrar los links
+  before_action :authenticate_user!, except: [:index, :show]
 
   # GET /links
   # GET /links.json
@@ -14,7 +16,8 @@ class LinksController < ApplicationController
 
   # GET /links/new
   def new
-    @link = Link.new
+    #Para que se pueda guardar el usuario en la tabla de links
+    @link = current_user.links.build
   end
 
   # GET /links/1/edit
@@ -24,7 +27,8 @@ class LinksController < ApplicationController
   # POST /links
   # POST /links.json
   def create
-    @link = Link.new(link_params)
+    #Al crear el nuevo link se asocia el usuario
+    @link = current_user.links.build(link_params)
 
     respond_to do |format|
       if @link.save
